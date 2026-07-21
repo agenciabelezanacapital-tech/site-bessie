@@ -93,28 +93,17 @@ document.addEventListener('DOMContentLoaded', function () {
   /**
    * Dispara o evento de conversão ao clicar em um botão de WhatsApp.
    * O clique NÃO é bloqueado: o link continua abrindo normalmente em nova aba.
+   * Chamamos gtag_report_conversion() sem "url" (função definida no <head>)
+   * justamente para não redirecionar a aba atual — os links já abrem o
+   * WhatsApp em uma nova aba via target="_blank".
    */
   function trackWhatsAppClick(botao) {
     var origem = botao.closest('section');
     var idOrigem = origem ? (origem.id || origem.className) : 'desconhecida';
 
-    // EDITAR: inserir aqui o evento de conversão do Google Ads / Google Tag Manager.
-    // Exemplo com gtag (Google Ads):
-    //
-    // if (typeof gtag === 'function') {
-    //   gtag('event', 'conversion', {
-    //     'send_to': 'AW-SEU_ID_DE_CONVERSAO/SEU_LABEL', // EDITAR: ID de conversão do Google Ads
-    //     'event_callback': function () {}
-    //   });
-    // }
-    //
-    // Exemplo com Google Tag Manager (dataLayer):
-    //
-    // window.dataLayer = window.dataLayer || [];
-    // window.dataLayer.push({
-    //   'event': 'whatsapp_click',
-    //   'click_origin': idOrigem
-    // });
+    if (typeof gtag_report_conversion === 'function') {
+      gtag_report_conversion();
+    }
 
     console.log('Clique no WhatsApp registrado. Origem:', idOrigem);
   }
